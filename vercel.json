@@ -19,8 +19,5 @@
       "dest": "/dist/main.js",
       "methods": ["GET","PUT","PATCH","DELETE","POST"]
     }
-  ],
-  "env": {
-    "DATABASE_URL": "@database_url"
-  }
+  ]
 }
