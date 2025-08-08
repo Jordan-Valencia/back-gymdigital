@@ -17,7 +17,7 @@
     {
       "src": "/(.*)",
       "dest": "/dist/main.js",
-      "method": ["GET","PUT","PATCH","DELETE","POST"]
+      "methods": ["GET","PUT","PATCH","DELETE","POST"]
     }
   ],
   "env": {
