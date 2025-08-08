@@ -2,15 +2,8 @@
   "version": 2,
   "builds": [
     {
-      "src": "package.json",
-      "use": "@vercel/node",
-      "config": {
-        "includeFiles": [
-          "prisma/schema.prisma",
-          "prisma/migrations/**",
-          "node_modules/.prisma/client/**"
-        ]
-      }
+      "src": "src/main.ts",
+      "use": "@vercel/node"
     }
   ],
   "routes": [
