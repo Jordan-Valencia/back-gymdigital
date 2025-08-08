@@ -1,26 +1,9 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "package.json",
-      "use": "@vercel/node",
-      "config": {
-        "includeFiles": [
-          "prisma/schema.prisma",
-          "prisma/migrations/**",
-          "node_modules/.prisma/client/**"
-        ]
-      }
-    }
-  ],
   "routes": [
     {
       "src": "/(.*)",
       "dest": "/dist/main.js"
     }
-  ],
-  "env": {
-    "NODE_ENV": "production",
-    "PORT": "3000"
-  }
+  ]
 }
