@@ -1,0 +1,167 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model CategoriaInventario {
+  id             String           @id
+  nombre         String
+  tipo           CategoriaTipo
+  descripcion    String?
+  ItemInventario ItemInventario[]
+  Producto       Producto[]
+}
+
+model DetalleVenta {
+  id              String   @id
+  venta_id        String
+  producto_id     String
+  cantidad        Int
+  precio_unitario Float
+  subtotal        Float
+  Producto        Producto @relation(fields: [producto_id], references: [id])
+  Venta           Venta    @relation(fields: [venta_id], references: [id])
+}
+
+model Entrenador {
+  id             String          @id
+  nombre         String
+  telefono       String
+  email          String
+  especialidad   String?
+  tarifa_hora    Float
+  fecha_registro DateTime
+  activo         Boolean
+  HoraTrabajada  HoraTrabajada[]
+}
+
+model Evento {
+  id             String    @id
+  titulo         String
+  descripcion    String?
+  fecha_inicio   DateTime
+  fecha_fin      DateTime?
+  tipo           String
+  color          String?
+  fecha_registro DateTime
+}
+
+model Gasto {
+  id             String   @id
+  concepto       String
+  monto          Float
+  fecha          DateTime
+  categoria      String
+  descripcion    String?
+  fecha_registro DateTime
+}
+
+model HoraTrabajada {
+  id             String     @id
+  entrenador_id  String
+  fecha          DateTime
+  horas          Float
+  descripcion    String?
+  fecha_registro DateTime
+  Entrenador     Entrenador @relation(fields: [entrenador_id], references: [id])
+}
+
+model ItemGaleria {
+  id             String   @id
+  titulo         String
+  descripcion    String?
+  ruta_imagen    String
+  fecha          DateTime
+  fecha_registro DateTime
+}
+
+model ItemInventario {
+  id                  String              @id
+  nombre              String
+  categoria_id        String
+  cantidad            Int
+  stock_minimo        Int
+  precio_unitario     Float?
+  descripcion         String?
+  fecha_registro      DateTime
+  CategoriaInventario CategoriaInventario @relation(fields: [categoria_id], references: [id])
+}
+
+model Membresia {
+  id            String   @id
+  usuario_id    String
+  plan_id       String
+  fecha_inicio  DateTime
+  fecha_fin     DateTime
+  precio_pagado Float
+  metodo_pago   String
+  fecha_pago    DateTime
+  Plan          Plan     @relation(fields: [plan_id], references: [id])
+  Usuario       Usuario  @relation(fields: [usuario_id], references: [id])
+}
+
+model Notificacion {
+  id              String   @id
+  tipo            String
+  mensaje         String
+  leida           Boolean
+  fecha_creacion  DateTime
+  referencia_id   String?
+  referencia_tipo String?
+}
+
+model Plan {
+  id          String      @id
+  nombre      String
+  descripcion String
+  precio      Float
+  Membresia   Membresia[]
+}
+
+model Producto {
+  id                  String              @id
+  nombre              String
+  categoria_id        String
+  cantidad            Int
+  stock_minimo        Int
+  precio_venta        Float
+  costo               Float
+  descripcion         String?
+  fecha_registro      DateTime
+  DetalleVenta        DetalleVenta[]
+  CategoriaInventario CategoriaInventario @relation(fields: [categoria_id], references: [id])
+}
+
+model Usuario {
+  id               String      @id
+  nombre           String
+  telefono         String
+  email            String      @unique
+  fecha_nacimiento DateTime
+  fecha_registro   DateTime    @default(now())
+  activo           Boolean
+  notas            String?
+  Membresia        Membresia[]
+  Venta            Venta[]
+}
+
+model Venta {
+  id           String         @id
+  usuario_id   String?
+  fecha_venta  DateTime
+  total        Float
+  metodo_pago  String
+  notas        String?
+  DetalleVenta DetalleVenta[]
+  Usuario      Usuario?       @relation(fields: [usuario_id], references: [id])
+}
+
+enum CategoriaTipo {
+  implemento
+  producto
+}
