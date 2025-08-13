@@ -1,9 +1,6 @@
-import { IsString, IsEmail, IsBoolean, IsOptional, IsDateString } from 'class-validator';
+import { IsString, IsBoolean, IsEmail, IsOptional, IsDateString } from 'class-validator';
 
 export class CreateUsuarioDto {
-  @IsString()
-  id: string;
-
   @IsString()
   nombre: string;
 
@@ -22,4 +19,5 @@ export class CreateUsuarioDto {
   @IsOptional()
   @IsString()
   notas?: string;
+
 }

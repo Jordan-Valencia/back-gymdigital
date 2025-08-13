@@ -1,31 +1,4 @@
-import { IsString, IsOptional, IsNumber, IsBoolean, IsDateString } from 'class-validator';
+import { PartialType } from '@nestjs/mapped-types';
+import { CreateEntrenadorDto } from './create-entrenador.dto';
 
-export class UpdateEntrenadorDto {
-  @IsOptional()
-  @IsString()
-  nombre?: string;
-
-  @IsOptional()
-  @IsString()
-  telefono?: string;
-
-  @IsOptional()
-  @IsString()
-  email?: string;
-
-  @IsOptional()
-  @IsString()
-  especialidad?: string;
-
-  @IsOptional()
-  @IsNumber()
-  tarifa_hora?: number;
-
-  @IsOptional()
-  @IsDateString()
-  fecha_registro?: string;
-
-  @IsOptional()
-  @IsBoolean()
-  activo?: boolean;
-}
+export class UpdateEntrenadorDto extends PartialType(CreateEntrenadorDto) {}

@@ -1,13 +1,11 @@
-import { IsString, IsNumber, IsOptional, IsDateString } from 'class-validator';
+import { IsString, IsOptional, IsNumber, IsDateString, Min } from 'class-validator';
 
 export class CreateGastoDto {
-  @IsString()
-  id: string;
-
   @IsString()
   concepto: string;
 
   @IsNumber()
+  @Min(0)
   monto: number;
 
   @IsDateString()
@@ -20,6 +18,5 @@ export class CreateGastoDto {
   @IsString()
   descripcion?: string;
 
-  @IsDateString()
-  fecha_registro: string;
+  // fecha_registro lo genera el backend
 }

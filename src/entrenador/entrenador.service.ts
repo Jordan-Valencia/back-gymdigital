@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { Prisma, Entrenador } from '@prisma/client';
 import { CreateEntrenadorDto } from './dto/create-entrenador.dto';
@@ -8,42 +8,81 @@ import { UpdateEntrenadorDto } from './dto/update-entrenador.dto';
 export class EntrenadorService {
   constructor(private readonly prisma: PrismaService) {}
 
+  /** Crear un nuevo entrenador */
   async create(data: CreateEntrenadorDto): Promise<Entrenador> {
-    const createData: Prisma.EntrenadorCreateInput = {
-      id: data.id,
-      nombre: data.nombre,
-      telefono: data.telefono,
-      email: data.email,
-      especialidad: data.especialidad,
-      tarifa_hora: data.tarifa_hora,
-      fecha_registro: new Date(data.fecha_registro),
-      activo: data.activo,
-    };
-    return this.prisma.entrenador.create({ data: createData });
-  }
-
-  async findAll(): Promise<Entrenador[]> {
-    return this.prisma.entrenador.findMany();
-  }
-
-  async findOne(id: string): Promise<Entrenador | null> {
-    return this.prisma.entrenador.findUnique({ where: { id } });
-  }
-
-  async update(id: string, data: UpdateEntrenadorDto): Promise<Entrenador> {
-    const updateData: Prisma.EntrenadorUpdateInput = { ...data };
-
-    if (data.fecha_registro) {
-      updateData.fecha_registro = new Date(data.fecha_registro);
+    try {
+      return await this.prisma.entrenador.create({
+        data: {
+          nombre: data.nombre,
+          telefono: data.telefono,
+          email: data.email,
+          especialidad: data.especialidad,
+          tarifa_hora: data.tarifa_hora,
+          fecha_registro: new Date(), // ✅ generado automáticamente
+          activo: data.activo,
+        },
+      });
+    } catch (error) {
+      console.error('Error creando entrenador:', error);
+      throw new BadRequestException('No se pudo crear el entrenador. Verifica los datos.');
     }
+  }
 
-    return this.prisma.entrenador.update({
-      where: { id },
-      data: updateData,
+  /** Listar todos los entrenadores */
+  async findAll(): Promise<Entrenador[]> {
+    return this.prisma.entrenador.findMany({
+      orderBy: { fecha_registro: 'desc' },
     });
   }
 
+  /** Buscar entrenador por ID */
+  async findOne(id: string): Promise<Entrenador> {
+    const entrenador = await this.prisma.entrenador.findUnique({ where: { id } });
+    if (!entrenador) {
+      throw new NotFoundException(`No se encontró un entrenador con el ID ${id}`);
+    }
+    return entrenador;
+  }
+
+  /** Actualizar entrenador */
+  async update(id: string, data: UpdateEntrenadorDto): Promise<Entrenador> {
+    const existe = await this.prisma.entrenador.findUnique({ where: { id } });
+    if (!existe) {
+      throw new NotFoundException(`No se encontró un entrenador con el ID ${id}`);
+    }
+
+    try {
+      const updateData: Prisma.EntrenadorUpdateInput = {
+        nombre: data.nombre,
+        telefono: data.telefono,
+        email: data.email,
+        especialidad: data.especialidad,
+        tarifa_hora: data.tarifa_hora,
+        activo: data.activo,
+      };
+
+      return await this.prisma.entrenador.update({
+        where: { id },
+        data: updateData,
+      });
+    } catch (error) {
+      console.error('Error actualizando entrenador:', error);
+      throw new BadRequestException('No se pudo actualizar el entrenador.');
+    }
+  }
+
+  /** Eliminar entrenador */
   async remove(id: string): Promise<Entrenador> {
-    return this.prisma.entrenador.delete({ where: { id } });
+    const existe = await this.prisma.entrenador.findUnique({ where: { id } });
+    if (!existe) {
+      throw new NotFoundException(`No se encontró un entrenador con el ID ${id}`);
+    }
+
+    try {
+      return await this.prisma.entrenador.delete({ where: { id } });
+    } catch (error) {
+      console.error('Error eliminando entrenador:', error);
+      throw new BadRequestException('No se pudo eliminar el entrenador.');
+    }
   }
 }

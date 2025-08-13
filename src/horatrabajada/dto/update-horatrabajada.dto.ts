@@ -1,23 +1,4 @@
-import { IsString, IsNumber, IsOptional, IsDateString } from 'class-validator';
+import { PartialType } from '@nestjs/mapped-types';
+import { CreateHoraTrabajadaDto } from './create-horatrabajada.dto';
 
-export class UpdateHoraTrabajadaDto {
-  @IsOptional()
-  @IsString()
-  entrenador_id?: string;
-
-  @IsOptional()
-  @IsDateString()
-  fecha?: string;
-
-  @IsOptional()
-  @IsNumber()
-  horas?: number;
-
-  @IsOptional()
-  @IsString()
-  descripcion?: string;
-
-  @IsOptional()
-  @IsDateString()
-  fecha_registro?: string;
-}
+export class UpdateHoraTrabajadaDto extends PartialType(CreateHoraTrabajadaDto) {}

@@ -1,17 +1,11 @@
-import { IsString, IsOptional, IsDateString, IsNumber } from 'class-validator';
+import { IsDateString, IsNumber, Min, IsOptional, IsString, IsUUID } from 'class-validator';
 
 export class CreateVentaDto {
-  @IsString()
-  id: string;
-
-  @IsOptional()
-  @IsString()
-  usuario_id?: string; 
-
   @IsDateString()
   fecha_venta: string;
 
   @IsNumber()
+  @Min(0)
   total: number;
 
   @IsString()
@@ -20,4 +14,8 @@ export class CreateVentaDto {
   @IsOptional()
   @IsString()
   notas?: string;
+
+  @IsOptional()
+  @IsUUID()
+  usuario_id?: string;
 }

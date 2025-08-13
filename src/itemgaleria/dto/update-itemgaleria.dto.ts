@@ -1,23 +1,4 @@
-import { IsString, IsOptional, IsDateString } from 'class-validator';
+import { PartialType } from '@nestjs/mapped-types';
+import { CreateItemGaleriaDto } from './create-itemgaleria.dto';
 
-export class UpdateItemGaleriaDto {
-  @IsOptional()
-  @IsString()
-  titulo?: string;
-
-  @IsOptional()
-  @IsString()
-  descripcion?: string;
-
-  @IsOptional()
-  @IsString()
-  ruta_imagen?: string;
-
-  @IsOptional()
-  @IsDateString()
-  fecha?: string;
-
-  @IsOptional()
-  @IsDateString()
-  fecha_registro?: string;
-}
+export class UpdateItemGaleriaDto extends PartialType(CreateItemGaleriaDto) {}

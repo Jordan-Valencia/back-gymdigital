@@ -1,8 +1,9 @@
 import { IsString, IsOptional, IsBoolean, IsDateString } from 'class-validator';
 
 export class CreateNotificacionDto {
+  @IsOptional()
   @IsString()
-  id: string;
+  id?: string;
 
   @IsString()
   tipo: string;
@@ -12,9 +13,10 @@ export class CreateNotificacionDto {
 
   @IsBoolean()
   leida: boolean;
-
+  
+  @IsOptional()
   @IsDateString()
-  fecha_creacion: string;
+  fecha_creacion?: string;
 
   @IsOptional()
   @IsString()

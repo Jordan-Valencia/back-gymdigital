@@ -1,23 +1,4 @@
-import { IsString, IsOptional, IsDateString, IsNumber } from 'class-validator';
+import { PartialType } from '@nestjs/mapped-types';
+import { CreateVentaDto } from './create-venta.dto';
 
-export class UpdateVentaDto {
-  @IsOptional()
-  @IsString()
-  usuario_id?: string;
-
-  @IsOptional()
-  @IsDateString()
-  fecha_venta?: string;
-
-  @IsOptional()
-  @IsNumber()
-  total?: number;
-
-  @IsOptional()
-  @IsString()
-  metodo_pago?: string;
-
-  @IsOptional()
-  @IsString()
-  notas?: string;
-}
+export class UpdateVentaDto extends PartialType(CreateVentaDto) {}

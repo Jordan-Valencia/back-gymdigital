@@ -1,8 +1,9 @@
-import { IsString, IsOptional, IsDateString } from 'class-validator';
+import { IsString, IsOptional, IsDateString, IsUUID } from 'class-validator';
 
 export class CreateItemGaleriaDto {
-  @IsString()
-  id: string;
+  @IsOptional()
+  @IsUUID()
+  id?: string; // generado automáticamente
 
   @IsString()
   titulo: string;
@@ -15,8 +16,7 @@ export class CreateItemGaleriaDto {
   ruta_imagen: string;
 
   @IsDateString()
-  fecha: string;
+  fecha: string; // fecha del evento/imagen
 
-  @IsDateString()
-  fecha_registro: string;
+  // fecha_registro no se envía, lo crea el backend
 }

@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsEnum } from 'class-validator';
+import { IsString, IsOptional, IsEnum, IsNotEmpty } from 'class-validator';
 
 export enum CategoriaTipo {
   IMPLEMENTO = 'implemento',
@@ -10,6 +10,7 @@ export class CreateCategoriaInventarioDto {
   id: string;
 
   @IsString()
+  @IsNotEmpty()
   nombre: string;
 
   @IsEnum(CategoriaTipo)

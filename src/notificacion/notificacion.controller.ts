@@ -22,7 +22,7 @@ export class NotificacionController {
   findNoLeidas() {
     return this.notificacionService.findNoLeidas();
   }
-  
+
   @Get(':id')
   findOne(@Param('id') id: string): Promise<Notificacion | null> {
     return this.notificacionService.findOne(id);
@@ -36,5 +36,17 @@ export class NotificacionController {
   @Delete(':id')
   remove(@Param('id') id: string): Promise<Notificacion> {
     return this.notificacionService.remove(id);
+  }
+
+  /** 🔹 Marca una notificación específica como leída */
+  @Put(':id/leida')
+  marcarLeida(@Param('id') id: string): Promise<Notificacion> {
+    return this.notificacionService.marcarLeida(id);
+  }
+
+  /** 🔹 Marca todas las notificaciones como leídas */
+  @Put('marcar-todas-leidas')
+  marcarTodasLeidas(): Promise<{ count: number }> {
+    return this.notificacionService.marcarTodasLeidas();
   }
 }

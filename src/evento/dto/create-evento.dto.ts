@@ -2,9 +2,6 @@ import { IsString, IsOptional, IsDateString } from 'class-validator';
 
 export class CreateEventoDto {
   @IsString()
-  id: string;
-
-  @IsString()
   titulo: string;
 
   @IsOptional()
@@ -24,7 +21,4 @@ export class CreateEventoDto {
   @IsOptional()
   @IsString()
   color?: string;
-
-  @IsDateString()
-  fecha_registro: string;
 }

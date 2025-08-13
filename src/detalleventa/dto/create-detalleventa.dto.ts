@@ -1,21 +1,25 @@
-import { IsString, IsInt, IsNumber } from 'class-validator';
+import { IsUUID, IsInt, Min, IsNumber, IsPositive, IsOptional } from 'class-validator';
 
 export class CreateDetalleVentaDto {
-  @IsString()
-  id: string;
-
-  @IsString()
-  venta_id: string;
-
-  @IsString()
-  producto_id: string;
+  @IsOptional()
+  @IsUUID()
+  id?: string; // generalmente generado por el backend
 
   @IsInt()
+  @Min(1)
   cantidad: number;
 
   @IsNumber()
+  @IsPositive()
   precio_unitario: number;
 
   @IsNumber()
+  @IsPositive()
   subtotal: number;
+
+  @IsUUID()
+  venta_id: string;
+
+  @IsUUID()
+  producto_id: string;
 }

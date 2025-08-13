@@ -1,16 +1,13 @@
-import { IsString, IsOptional, IsNumber, IsBoolean, IsDateString } from 'class-validator';
+import { IsString, IsOptional, IsNumber, IsBoolean, Min, IsEmail } from 'class-validator';
 
 export class CreateEntrenadorDto {
-  @IsString()
-  id: string;
-
   @IsString()
   nombre: string;
 
   @IsString()
   telefono: string;
 
-  @IsString()
+  @IsEmail()
   email: string;
 
   @IsOptional()
@@ -18,10 +15,8 @@ export class CreateEntrenadorDto {
   especialidad?: string;
 
   @IsNumber()
+  @Min(0)
   tarifa_hora: number;
-
-  @IsDateString()
-  fecha_registro: string; 
 
   @IsBoolean()
   activo: boolean;

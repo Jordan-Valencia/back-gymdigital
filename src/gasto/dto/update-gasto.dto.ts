@@ -1,27 +1,4 @@
-import { IsString, IsNumber, IsOptional, IsDateString } from 'class-validator';
+import { PartialType } from '@nestjs/mapped-types';
+import { CreateGastoDto } from './create-gasto.dto';
 
-export class UpdateGastoDto {
-  @IsOptional()
-  @IsString()
-  concepto?: string;
-
-  @IsOptional()
-  @IsNumber()
-  monto?: number;
-
-  @IsOptional()
-  @IsDateString()
-  fecha?: string;
-
-  @IsOptional()
-  @IsString()
-  categoria?: string;
-
-  @IsOptional()
-  @IsString()
-  descripcion?: string;
-
-  @IsOptional()
-  @IsDateString()
-  fecha_registro?: string;
-}
+export class UpdateGastoDto extends PartialType(CreateGastoDto) {}

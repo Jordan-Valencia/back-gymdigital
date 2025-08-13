@@ -13,8 +13,10 @@ export class NotificacionService {
       id: data.id,
       tipo: data.tipo,
       mensaje: data.mensaje,
-      leida: data.leida,
-      fecha_creacion: new Date(data.fecha_creacion),
+      leida: data.leida ?? false,
+      fecha_creacion: data.fecha_creacion
+        ? new Date(data.fecha_creacion)
+        : new Date(),
       referencia_id: data.referencia_id,
       referencia_tipo: data.referencia_tipo,
     };
@@ -22,15 +24,18 @@ export class NotificacionService {
   }
 
   async findAll(): Promise<Notificacion[]> {
-    return this.prisma.notificacion.findMany();
+    return this.prisma.notificacion.findMany({
+      orderBy: { fecha_creacion: 'desc' },
+    });
   }
 
   async findNoLeidas(): Promise<Notificacion[]> {
-  return this.prisma.notificacion.findMany({
-    where: { leida: false },
-    orderBy: { fecha_creacion: 'desc' }
-  });
-}
+    return this.prisma.notificacion.findMany({
+      where: { leida: false },
+      orderBy: { fecha_creacion: 'desc' },
+    });
+  }
+
   async findOne(id: string): Promise<Notificacion | null> {
     return this.prisma.notificacion.findUnique({ where: { id } });
   }
@@ -48,5 +53,18 @@ export class NotificacionService {
 
   async remove(id: string): Promise<Notificacion> {
     return this.prisma.notificacion.delete({ where: { id } });
+  }
+
+  async marcarLeida(id: string): Promise<Notificacion> {
+    return this.prisma.notificacion.update({
+      where: { id },
+      data: { leida: true },
+    });
+  }
+  async marcarTodasLeidas(): Promise<{ count: number }> {
+    return this.prisma.notificacion.updateMany({
+      where: { leida: false },
+      data: { leida: true },
+    });
   }
 }
