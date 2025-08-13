@@ -25,6 +25,12 @@ export class NotificacionService {
     return this.prisma.notificacion.findMany();
   }
 
+  async findNoLeidas(): Promise<Notificacion[]> {
+  return this.prisma.notificacion.findMany({
+    where: { leida: false },
+    orderBy: { fecha_creacion: 'desc' }
+  });
+}
   async findOne(id: string): Promise<Notificacion | null> {
     return this.prisma.notificacion.findUnique({ where: { id } });
   }

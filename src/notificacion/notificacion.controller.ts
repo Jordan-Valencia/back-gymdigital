@@ -18,6 +18,11 @@ export class NotificacionController {
     return this.notificacionService.findAll();
   }
 
+  @Get('no-leidas')
+  findNoLeidas() {
+    return this.notificacionService.findNoLeidas();
+  }
+  
   @Get(':id')
   findOne(@Param('id') id: string): Promise<Notificacion | null> {
     return this.notificacionService.findOne(id);
