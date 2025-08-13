@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Put, Delete, Param, Body } from '@nestjs/common';
 import { EntrenadorService } from './entrenador.service';
-import { Entrenador } from '../../generated/prisma';
+import { Entrenador } from '@prisma/client';
 import { CreateEntrenadorDto } from './dto/create-entrenador.dto';
 import { UpdateEntrenadorDto } from './dto/update-entrenador.dto';
 

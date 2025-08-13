@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service'; // Ajusta la ruta según tu estructura
-import { Prisma, Membresia } from '../../generated/prisma';
+import { Prisma, Membresia } from '@prisma/client';
 
 @Injectable()
 export class MembresiaService {

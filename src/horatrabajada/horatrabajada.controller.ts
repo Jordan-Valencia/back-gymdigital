@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Put, Delete, Param, Body } from '@nestjs/common';
 import { HoraTrabajadaService } from './horatrabajada.service';
-import { HoraTrabajada } from '../../generated/prisma';
+import { HoraTrabajada } from '@prisma/client';
 import { CreateHoraTrabajadaDto } from './dto/create-horatrabajada.dto';
 import { UpdateHoraTrabajadaDto } from './dto/update-horatrabajada.dto';
 

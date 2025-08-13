@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Put, Delete, Param, Body } from '@nestjs/common';
 import { NotificacionService } from './notificacion.service';
-import { Notificacion } from '../../generated/prisma';
+import { Notificacion } from '@prisma/client';
 import { CreateNotificacionDto } from './dto/create-notificacion.dto';
 import { UpdateNotificacionDto } from './dto/update-notificacion.dto';
 

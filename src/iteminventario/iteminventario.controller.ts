@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Put, Delete, Param, Body } from '@nestjs/common';
 import { ItemInventarioService } from './iteminventario.service';
-import { ItemInventario } from '../../generated/prisma';
+import { ItemInventario } from '@prisma/client';
 import { CreateItemInventarioDto } from './dto/create-iteminventario.dto';
 import { UpdateItemInventarioDto } from './dto/update-iteminventario.dto';
 

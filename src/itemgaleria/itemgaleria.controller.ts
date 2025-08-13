@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Put, Delete, Param, Body } from '@nestjs/common';
 import { ItemGaleriaService } from './itemgaleria.service';
-import { ItemGaleria } from '../../generated/prisma';
+import { ItemGaleria } from '@prisma/client';
 import { CreateItemGaleriaDto } from './dto/create-itemgaleria.dto';
 import { UpdateItemGaleriaDto } from './dto/update-itemgaleria.dto';
 

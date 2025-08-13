@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { Prisma, Entrenador } from '../../generated/prisma';
+import { Prisma, Entrenador } from '@prisma/client';
 import { CreateEntrenadorDto } from './dto/create-entrenador.dto';
 import { UpdateEntrenadorDto } from './dto/update-entrenador.dto';
 

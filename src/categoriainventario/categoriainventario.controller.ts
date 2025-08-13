@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Put, Delete, Param, Body } from '@nestjs/common';
 import { CategoriaInventarioService } from './categoriainventario.service';
-import { CategoriaInventario } from '../../generated/prisma';
+import { CategoriaInventario } from '@prisma/client';
 import { CreateCategoriaInventarioDto } from './dto/create-categoriainventario.dto';
 import { UpdateCategoriaInventarioDto } from './dto/update-categoriainventario.dto';
 

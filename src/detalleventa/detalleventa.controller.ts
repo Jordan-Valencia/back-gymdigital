@@ -1,7 +1,7 @@
 // src/detalleventa/detalleventa.controller.ts
 import { Controller, Get, Post, Put, Delete, Param, Body } from '@nestjs/common';
 import { DetalleVentaService } from './detalleventa.service';
-import { DetalleVenta } from '../../generated/prisma';
+import { DetalleVenta } from '@prisma/client';
 import { CreateDetalleVentaDto } from './dto/create-detalleventa.dto';
 import { UpdateDetalleVentaDto } from './dto/update-detalleventa.dto';
 

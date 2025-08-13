@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Put, Delete, Param, Body } from '@nestjs/common';
 import { MembresiaService } from './membresia.service';
-import { Prisma, Membresia } from '../../generated/prisma';
+import { Prisma, Membresia } from '@prisma/client';
 
 @Controller('membresia')
 export class MembresiaController {

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { Prisma, CategoriaInventario } from '../../generated/prisma';
+import { Prisma, CategoriaInventario } from '@prisma/client';
 import { CreateCategoriaInventarioDto } from './dto/create-categoriainventario.dto';
 import { UpdateCategoriaInventarioDto } from './dto/update-categoriainventario.dto';
 

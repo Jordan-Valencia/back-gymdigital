@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { Prisma, ItemInventario } from '../../generated/prisma';
+import { Prisma, ItemInventario } from '@prisma/client';
 import { CreateItemInventarioDto } from './dto/create-iteminventario.dto';
 import { UpdateItemInventarioDto } from './dto/update-iteminventario.dto';
 

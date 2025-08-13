@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { Prisma, HoraTrabajada } from '../../generated/prisma';
+import { Prisma, HoraTrabajada } from '@prisma/client';
 import { CreateHoraTrabajadaDto } from './dto/create-horatrabajada.dto';
 import { UpdateHoraTrabajadaDto } from './dto/update-horatrabajada.dto';
 

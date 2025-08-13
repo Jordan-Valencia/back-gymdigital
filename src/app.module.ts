@@ -17,9 +17,10 @@ import { PlanModule } from './plan/plan.module';
 import { EventoModule } from './evento/evento.module';
 import { VentaModule } from './venta/venta.module';
 import { NotificacionModule } from './notificacion/notificacion.module';
+import { DashboardModule } from './dashboard/dashboard.module';
 
 @Module({
-  imports: [UsuariosModule, ProductoModule, MembresiaModule, PrismaModule, CategoriaInventarioModule, DetalleVentaModule, EntrenadorModule, GastoModule, HoraTrabajadaModule, ItemGaleriaModule, ItemInventarioModule, PlanModule, EventoModule, VentaModule, NotificacionModule],
+  imports: [UsuariosModule, ProductoModule, MembresiaModule, PrismaModule, CategoriaInventarioModule, DetalleVentaModule, EntrenadorModule, GastoModule, HoraTrabajadaModule, ItemGaleriaModule, ItemInventarioModule, PlanModule, EventoModule, VentaModule, NotificacionModule, DashboardModule],
   controllers: [AppController],
   providers: [AppService, PrismaService],
 })

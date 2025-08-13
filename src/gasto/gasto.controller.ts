@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Put, Delete, Param, Body } from '@nestjs/common';
 import { GastoService } from './gasto.service';
-import { Gasto } from '../../generated/prisma';
+import { Gasto } from '@prisma/client';
 import { CreateGastoDto } from './dto/create-gasto.dto';
 import { UpdateGastoDto } from './dto/update-gasto.dto';
 

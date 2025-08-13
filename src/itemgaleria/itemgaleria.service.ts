@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { Prisma, ItemGaleria } from '../../generated/prisma';
+import { Prisma, ItemGaleria } from '@prisma/client';
 import { CreateItemGaleriaDto } from './dto/create-itemgaleria.dto';
 import { UpdateItemGaleriaDto } from './dto/update-itemgaleria.dto';
 
