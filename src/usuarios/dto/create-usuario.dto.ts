@@ -1,4 +1,4 @@
-import { IsString, IsBoolean, IsEmail, IsOptional, IsDateString } from 'class-validator';
+import { IsString, IsEmail, IsDateString, IsOptional, IsBoolean } from 'class-validator';
 
 export class CreateUsuarioDto {
   @IsString()
@@ -11,7 +11,7 @@ export class CreateUsuarioDto {
   email: string;
 
   @IsDateString()
-  fecha_nacimiento: string;
+  fecha_nacimiento: string; // Se enviará en formato YYYY-MM-DD y se transforma a Date en el servicio
 
   @IsBoolean()
   activo: boolean;
@@ -19,5 +19,4 @@ export class CreateUsuarioDto {
   @IsOptional()
   @IsString()
   notas?: string;
-
 }
