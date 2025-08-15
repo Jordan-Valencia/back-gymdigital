@@ -8,7 +8,6 @@ import { UpdateGastoDto } from './dto/update-gasto.dto';
 export class GastoService {
   constructor(private readonly prisma: PrismaService) {}
 
-  /** Crear un gasto */
   async create(data: CreateGastoDto): Promise<Gasto> {
     try {
       return await this.prisma.gasto.create({
@@ -18,7 +17,7 @@ export class GastoService {
           fecha: new Date(data.fecha),
           categoria: data.categoria,
           descripcion: data.descripcion,
-          fecha_registro: new Date(), // generado automáticamente
+          fecha_registro: new Date(), 
         },
       });
     } catch (error) {

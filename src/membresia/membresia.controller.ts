@@ -1,13 +1,15 @@
 import { Controller, Get, Post, Put, Delete, Param, Body } from '@nestjs/common';
 import { MembresiaService } from './membresia.service';
-import { Prisma, Membresia } from '@prisma/client';
+import { Membresia } from '@prisma/client';
+import { CreateMembresiaDto } from './dto/create-membresia.dto';
+import { UpdateMembresiaDto } from './dto/update-membresia.dto';
 
 @Controller('membresia')
 export class MembresiaController {
   constructor(private readonly membresiaService: MembresiaService) {}
 
   @Post()
-  create(@Body() data: Prisma.MembresiaCreateInput): Promise<Membresia> {
+  create(@Body() data: CreateMembresiaDto): Promise<Membresia> {
     return this.membresiaService.create(data);
   }
 
@@ -17,14 +19,14 @@ export class MembresiaController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<Membresia | null> {
+  findOne(@Param('id') id: string): Promise<Membresia> {
     return this.membresiaService.findOne(id);
   }
 
   @Put(':id')
   update(
     @Param('id') id: string,
-    @Body() data: Prisma.MembresiaUpdateInput,
+    @Body() data: UpdateMembresiaDto,
   ): Promise<Membresia> {
     return this.membresiaService.update(id, data);
   }

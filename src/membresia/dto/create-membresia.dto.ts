@@ -3,7 +3,6 @@ import {
   IsDateString,
   IsNumber,
   IsPositive,
-  IsOptional,
   IsUUID,
 } from 'class-validator';
 
@@ -29,8 +28,4 @@ export class CreateMembresiaDto {
 
   @IsDateString()
   fecha_pago: string;
-
-  @IsOptional()
-  @IsString()
-  notas?: string; // Si tienes un campo de notas o descripción
 }

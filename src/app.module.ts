@@ -10,7 +10,6 @@ import { CategoriaInventarioModule } from './categoriainventario/categoriainvent
 import { DetalleVentaModule } from './detalleventa/detalleventa.module';
 import { EntrenadorModule } from './entrenador/entrenador.module';
 import { GastoModule } from './gasto/gasto.module';
-import { HoraTrabajadaModule } from './horatrabajada/horatrabajada.module';
 import { ItemGaleriaModule } from './itemgaleria/itemgaleria.module';
 import { ItemInventarioModule } from './iteminventario/iteminventario.module';
 import { PlanModule } from './plan/plan.module';
@@ -20,7 +19,7 @@ import { NotificacionModule } from './notificacion/notificacion.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 
 @Module({
-  imports: [UsuariosModule, ProductoModule, MembresiaModule, PrismaModule, CategoriaInventarioModule, DetalleVentaModule, EntrenadorModule, GastoModule, HoraTrabajadaModule, ItemGaleriaModule, ItemInventarioModule, PlanModule, EventoModule, VentaModule, NotificacionModule, DashboardModule],
+  imports: [UsuariosModule, ProductoModule, MembresiaModule, PrismaModule, CategoriaInventarioModule, DetalleVentaModule, EntrenadorModule, GastoModule, ItemGaleriaModule, ItemInventarioModule, PlanModule, EventoModule, VentaModule, NotificacionModule, DashboardModule],
   controllers: [AppController],
   providers: [AppService, PrismaService],
 })

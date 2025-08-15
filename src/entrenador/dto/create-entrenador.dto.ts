@@ -16,7 +16,7 @@ export class CreateEntrenadorDto {
 
   @IsNumber()
   @Min(0)
-  tarifa_hora: number;
+  tarifa_mensual: number;
 
   @IsBoolean()
   activo: boolean;

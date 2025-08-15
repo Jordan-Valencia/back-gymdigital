@@ -15,7 +15,7 @@ export class UsuarioService {
         nombre: data.nombre,
         telefono: data.telefono,
         email: data.email,
-        fecha_nacimiento: new Date(data.fecha_nacimiento), // Conversión segura a Date
+        documento: data.documento,
         activo: data.activo,
         notas: data.notas,
         fecha_registro: new Date(), // Generada automáticamente
@@ -58,11 +58,8 @@ export class UsuarioService {
         email: data.email,
         activo: data.activo,
         notas: data.notas,
+        documento: data.documento
       };
-
-      if (data.fecha_nacimiento) {
-        updateData.fecha_nacimiento = new Date(data.fecha_nacimiento);
-      }
 
       return await this.prisma.usuario.update({
         where: { id },
