@@ -134,6 +134,7 @@ model Usuario {
   email          String     @unique
   documento      String     @unique
   fecha_registro DateTime   @default(now())
+  fecha_nacimiento DateTime
   activo         Boolean
   notas          String?
   Membresia      Membresia[]
@@ -188,7 +189,7 @@ model Entrenador {
   telefono         String
   email            String
   especialidad     String?
-  tarifa_hora      Float?         // Nuevo campo para tarifa por hora
+  tarifa_hora      Float         // Nuevo campo para tarifa por hora
   fecha_registro   DateTime
   activo           Boolean
   fecha_primer_pago DateTime?

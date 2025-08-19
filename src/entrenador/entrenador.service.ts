@@ -17,9 +17,9 @@ export class EntrenadorService {
           telefono: data.telefono,
           email: data.email,
           especialidad: data.especialidad,
-          tarifa_mensual: data.tarifa_mensual,
           fecha_registro: new Date(), // ✅ generado automáticamente
           activo: data.activo,
+          tarifa_hora: data.tarifa_hora, // ✅ agregar el campo requerido
         },
       });
     } catch (error) {
@@ -57,7 +57,6 @@ export class EntrenadorService {
         telefono: data.telefono,
         email: data.email,
         especialidad: data.especialidad,
-        tarifa_mensual: data.tarifa_mensual,
         activo: data.activo,
       };
 

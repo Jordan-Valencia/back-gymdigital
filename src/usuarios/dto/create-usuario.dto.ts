@@ -1,4 +1,4 @@
-import { IsString, IsEmail, IsOptional, IsBoolean } from "class-validator";
+import { IsString, IsEmail, IsOptional, IsBoolean, IsDateString } from "class-validator";
 
 export class CreateUsuarioDto {
   @IsString()
@@ -19,4 +19,7 @@ export class CreateUsuarioDto {
   @IsOptional()
   @IsString()
   notas?: string;
+
+  @IsDateString()
+  fecha_nacimiento: string; // Formato ISO 8601 (ej.: "1990-05-25")
 }

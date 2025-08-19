@@ -25,7 +25,6 @@ export class NominaService {
                         id: true,
                         nombre: true,
                         email: true,
-                        tarifa_mensual: true,
                         tarifa_hora: true,
                     },
                 },
@@ -64,7 +63,6 @@ export class NominaService {
                         id: true,
                         nombre: true,
                         email: true,
-                        tarifa_mensual: true,
                         tarifa_hora: true,
                     },
                 },
@@ -81,7 +79,6 @@ export class NominaService {
                         id: true,
                         nombre: true,
                         email: true,
-                        tarifa_mensual: true,
                         tarifa_hora: true,
                     },
                 },
@@ -115,7 +112,6 @@ export class NominaService {
                         id: true,
                         nombre: true,
                         email: true,
-                        tarifa_mensual: true,
                         tarifa_hora: true,
                     },
                 },
@@ -244,6 +240,7 @@ export class NominaService {
                         id: true,
                         nombre: true,
                         email: true,
+                        tarifa_hora: true,
                     },
                 },
             },
@@ -263,6 +260,7 @@ export class NominaService {
                         id: true,
                         nombre: true,
                         email: true,
+                        tarifa_hora: true,
                     },
                 },
             },
@@ -291,6 +289,7 @@ export class NominaService {
                     select: {
                         id: true,
                         nombre: true,
+                        email: true,
                         tarifa_hora: true,
                     },
                 },
@@ -309,14 +308,14 @@ export class NominaService {
         // Obtener tarifa del entrenador
         const entrenador = await this.prisma.entrenador.findUnique({
             where: { id: entrenadorId },
-            select: { tarifa_hora: true },
+            select: { tarifa_hora: true, nombre: true },
         });
 
         if (!entrenador) {
             throw new NotFoundException('Entrenador no encontrado');
         }
 
-        if (!entrenador.tarifa_hora) {
+        if (!entrenador.tarifa_hora || entrenador.tarifa_hora <= 0) {
             throw new BadRequestException(
                 'El entrenador no tiene tarifa por hora configurada',
             );
@@ -343,7 +342,13 @@ export class NominaService {
             totalHoras,
             tarifaHora: entrenador.tarifa_hora,
             salarioCalculado,
+            nombreEntrenador: entrenador.nombre,
             periodo: { año, mes },
+            detalleHoras: horasDelMes.map(h => ({
+                fecha: h.fecha,
+                horas: h.horas,
+                subtotal: h.horas * (entrenador.tarifa_hora ?? 0)
+            }))
         };
     }
 
@@ -358,35 +363,199 @@ export class NominaService {
                         id: true,
                         nombre: true,
                         email: true,
+                        tarifa_hora: true,
                     },
                 },
             },
             orderBy: [{ año: 'desc' }, { mes: 'desc' }],
         });
     }
-    // src/nomina/nomina.service.ts (agregar)
 
     async getEstadisticasEntrenador(entrenadorId: string) {
-        const [nominas, horas] = await Promise.all([
+        const [nominas, horas, entrenador] = await Promise.all([
             this.prisma.nomina.findMany({
                 where: { entrenador_id: entrenadorId },
             }),
             this.prisma.horasEntrenador.findMany({
                 where: { entrenador_id: entrenadorId },
             }),
+            this.prisma.entrenador.findUnique({
+                where: { id: entrenadorId },
+                select: { 
+                    nombre: true, 
+                    tarifa_hora: true,
+                    fecha_registro: true 
+                }
+            })
         ]);
+
+        if (!entrenador) {
+            throw new NotFoundException('Entrenador no encontrado');
+        }
 
         const totalPagado = nominas.reduce((sum, n) => sum + n.total_pagar, 0);
         const totalHoras = horas.reduce((sum, h) => sum + h.horas, 0);
 
+        // Estadísticas del año actual
+        const añoActual = new Date().getFullYear();
+        const nominasEsteAño = nominas.filter(n => n.año === añoActual);
+        const horasEsteAño = horas.filter(h => h.fecha.getFullYear() === añoActual);
+
+        const totalPagadoEsteAño = nominasEsteAño.reduce((sum, n) => sum + n.total_pagar, 0);
+        const totalHorasEsteAño = horasEsteAño.reduce((sum, h) => sum + h.horas, 0);
+
         return {
-            totalNominas: nominas.length,
-            totalPagado,
-            totalHoras,
-            promedioMensual:
-                nominas.length > 0 ? totalPagado / nominas.length : 0,
-            promedioHorasPorMes:
-                nominas.length > 0 ? totalHoras / nominas.length : 0,
+            entrenador: {
+                nombre: entrenador.nombre,
+                tarifa_hora: entrenador.tarifa_hora,
+                fecha_registro: entrenador.fecha_registro
+            },
+            estadisticasGenerales: {
+                totalNominas: nominas.length,
+                totalPagado,
+                totalHoras,
+                promedioMensual: nominas.length > 0 ? totalPagado / nominas.length : 0,
+                promedioHorasPorMes: nominas.length > 0 ? totalHoras / nominas.length : 0,
+            },
+            estadisticasAñoActual: {
+                nominasEsteAño: nominasEsteAño.length,
+                totalPagadoEsteAño,
+                totalHorasEsteAño,
+                promedioMensualEsteAño: nominasEsteAño.length > 0 ? totalPagadoEsteAño / nominasEsteAño.length : 0
+            }
+        };
+    }
+
+    // ===== MÉTODOS PARA AUTOMATIZACIÓN =====
+
+    async generarNominaPorHoras(entrenadorId: string, año: number, mes: number) {
+        // Verificar que no exista ya una nómina
+        const existingNomina = await this.prisma.nomina.findFirst({
+            where: {
+                entrenador_id: entrenadorId,
+                mes,
+                año
+            }
+        });
+
+        if (existingNomina) {
+            throw new BadRequestException(
+                `Ya existe una nómina para este entrenador en ${mes}/${año}`
+            );
+        }
+
+        // Calcular salario basado en horas
+        const calculoSalario = await this.calcularSalarioPorHoras(entrenadorId, año, mes);
+
+        if (calculoSalario.totalHoras === 0) {
+            throw new BadRequestException(
+                `No se encontraron horas registradas para el entrenador en ${mes}/${año}`
+            );
+        }
+
+        // Crear la nómina automáticamente
+        const nomina = await this.prisma.nomina.create({
+            data: {
+                entrenador_id: entrenadorId,
+                mes,
+                año,
+                salario_base: calculoSalario.salarioCalculado,
+                bonificaciones: 0,
+                deducciones: 0,
+                total_pagar: calculoSalario.salarioCalculado,
+                estado: 'PENDIENTE',
+                notas: `Nómina generada automáticamente basada en ${calculoSalario.totalHoras} horas trabajadas`,
+                fecha_registro: new Date()
+            },
+            include: {
+                entrenador: {
+                    select: {
+                        id: true,
+                        nombre: true,
+                        email: true,
+                        tarifa_hora: true,
+                    },
+                },
+            }
+        });
+
+        return {
+            nomina,
+            calculoDetallado: calculoSalario
+        };
+    }
+
+    async actualizarEstadoNomina(id: string, nuevoEstado: 'PENDIENTE' | 'PAGADO' | 'VENCIDO') {
+        await this.findNominaById(id);
+
+        const datosActualizacion: any = { estado: nuevoEstado };
+        
+        if (nuevoEstado === 'PAGADO') {
+            datosActualizacion.fecha_pago = new Date();
+        }
+
+        return this.prisma.nomina.update({
+            where: { id },
+            data: datosActualizacion,
+            include: {
+                entrenador: {
+                    select: {
+                        id: true,
+                        nombre: true,
+                        email: true,
+                        tarifa_hora: true,
+                    },
+                },
+            },
+        });
+    }
+
+    async getResumenNominasPorAño(año: number) {
+        const nominas = await this.prisma.nomina.findMany({
+            where: { año },
+            include: {
+                entrenador: {
+                    select: {
+                        id: true,
+                        nombre: true,
+                        tarifa_hora: true,
+                    },
+                },
+            },
+        });
+
+        const totalPagado = nominas.reduce((sum, n) => sum + n.total_pagar, 0);
+        const nominasPendientes = nominas.filter(n => n.estado === 'PENDIENTE');
+        const nominasPagadas = nominas.filter(n => n.estado === 'PAGADO');
+
+        const resumenPorEntrenador = nominas.reduce((acc, nomina) => {
+            const entrenadorId = nomina.entrenador_id;
+            if (!acc[entrenadorId]) {
+                acc[entrenadorId] = {
+                    entrenador: nomina.entrenador,
+                    totalPagado: 0,
+                    nominasCount: 0,
+                    pendientes: 0,
+                    pagadas: 0
+                };
+            }
+            acc[entrenadorId].totalPagado += nomina.total_pagar;
+            acc[entrenadorId].nominasCount += 1;
+            if (nomina.estado === 'PENDIENTE') acc[entrenadorId].pendientes += 1;
+            if (nomina.estado === 'PAGADO') acc[entrenadorId].pagadas += 1;
+            return acc;
+        }, {} as Record<string, any>);
+
+        return {
+            año,
+            resumenGeneral: {
+                totalNominas: nominas.length,
+                totalPagado,
+                nominasPendientes: nominasPendientes.length,
+                nominasPagadas: nominasPagadas.length,
+                montoPendiente: nominasPendientes.reduce((sum, n) => sum + n.total_pagar, 0)
+            },
+            resumenPorEntrenador: Object.values(resumenPorEntrenador)
         };
     }
 }
