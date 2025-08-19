@@ -1,158 +1,403 @@
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model CategoriaInventario {
-    id             String           @id @default(uuid())
-    nombre         String
-    tipo           CategoriaTipo
-    descripcion    String?
-    ItemInventario ItemInventario[]
-    Producto       Producto[]
+  id              String           @id @default(uuid())
+  nombre          String           @unique
+  tipo            CategoriaTipo
+  descripcion     String?
+  ItemInventario  ItemInventario[]
+  Producto        Producto[]
+}
+
+model ReporteFinanciero {
+  id              String   @id @default(uuid())
+  tipo            String
+  fecha_inicio    DateTime
+  fecha_fin       DateTime
+  datos           Json
+  fecha_generacion DateTime @default(now())
+  generado_por    String?
 }
 
 model DetalleVenta {
-    id              String   @id @default(uuid())
-    venta_id        String
-    producto_id     String
-    cantidad        Int
-    precio_unitario Float
-    subtotal        Float
-    Producto        Producto @relation(fields: [producto_id], references: [id])
-    Venta           Venta    @relation(fields: [venta_id], references: [id])
-}
-
-model Entrenador {
-  id                String   @id @default(uuid())
-  nombre            String
-  telefono          String
-  email             String
-  especialidad      String?
-  tarifa_mensual    Float
-  fecha_registro    DateTime
-  activo            Boolean
-  fecha_primer_pago DateTime? 
-  fecha_ultimo_pago DateTime? 
+  id             String    @id @default(uuid())
+  venta_id       String
+  producto_id    String
+  cantidad       Int
+  precio_unitario Float
+  subtotal       Float
+  Producto       Producto  @relation(fields: [producto_id], references: [id])
+  Venta          Venta     @relation(fields: [venta_id], references: [id])
 }
 
 
 model Evento {
-    id             String    @id @default(uuid())
-    titulo         String
-    descripcion    String?
-    fecha_inicio   DateTime
-    fecha_fin      DateTime?
-    tipo           String
-    color          String?
-    fecha_registro DateTime
+  id             String    @id @default(uuid())
+  titulo         String
+  descripcion    String?
+  fecha_inicio   DateTime
+  fecha_fin      DateTime?
+  tipo           String
+  color          String?
+  fecha_registro DateTime
 }
 
 model Gasto {
-    id             String   @id @default(uuid())
-    concepto       String
-    monto          Float
-    fecha          DateTime
-    categoria      String
-    descripcion    String?
-    fecha_registro DateTime
+  id             String        @id @default(uuid())
+  concepto       String
+  monto          Float
+  fecha          DateTime
+  categoria_id   String
+  descripcion    String?
+  fecha_registro DateTime
+  CategoriaGasto CategoriaGasto @relation(fields: [categoria_id], references: [id])
 }
 
 model ItemGaleria {
-    id             String   @id @default(uuid())
-    titulo         String
-    descripcion    String?
-    ruta_imagen    String
-    fecha          DateTime
-    fecha_registro DateTime
+  id             String    @id @default(uuid())
+  titulo         String
+  descripcion    String?
+  ruta_imagen    String
+  fecha          DateTime
+  fecha_registro DateTime
 }
 
 model ItemInventario {
-    id                  String              @id @default(uuid())
-    nombre              String
-    categoria_id        String
-    cantidad            Int
-    stock_minimo        Int
-    precio_unitario     Float?
-    descripcion         String?
-    fecha_registro      DateTime
-    CategoriaInventario CategoriaInventario @relation(fields: [categoria_id], references: [id])
+  id                  String             @id @default(uuid())
+  nombre              String
+  categoria_id        String
+  cantidad            Int
+  stock_minimo        Int
+  precio_unitario     Float?
+  descripcion         String?
+  fecha_registro      DateTime
+  CategoriaInventario CategoriaInventario @relation(fields: [categoria_id], references: [id])
 }
 
 model Membresia {
-    id            String   @id @default(uuid())
-    usuario_id    String
-    plan_id       String
-    fecha_inicio  DateTime
-    fecha_fin     DateTime
-    precio_pagado Float
-    metodo_pago   String
-    fecha_pago    DateTime
-    Plan          Plan     @relation(fields: [plan_id], references: [id])
-    Usuario       Usuario  @relation(fields: [usuario_id], references: [id])
+  id            String         @id @default(uuid())
+  usuario_id    String
+  plan_id       String
+  fecha_inicio  DateTime
+  fecha_fin     DateTime
+  precio_pagado Float
+  metodo_pago   String
+  fecha_pago    DateTime
+  Plan          Plan           @relation(fields: [plan_id], references: [id])
+  Usuario       Usuario        @relation(fields: [usuario_id], references: [id])
+  pagos         PagoMembresia[]
 }
 
 model Notificacion {
-    id              String   @id @default(uuid())
-    tipo            String
-    mensaje         String
-    leida           Boolean
-    fecha_creacion  DateTime
-    referencia_id   String?
-    referencia_tipo String?
+  id             String    @id @default(uuid())
+  tipo           String
+  mensaje        String
+  leida          Boolean
+  fecha_creacion DateTime
+  referencia_id  String?
+  referencia_tipo String?
 }
 
 model Plan {
-    id          String      @id @default(uuid())
-    nombre      String
-    descripcion String
-    precio      Float
-    Membresia   Membresia[]
+  id          String      @id @default(uuid())
+  nombre      String
+  descripcion String
+  precio      Float
+  Membresia   Membresia[]
 }
 
 model Producto {
-    id                  String              @id @default(uuid())
-    nombre              String
-    categoria_id        String
-    cantidad            Int
-    stock_minimo        Int
-    precio_venta        Float
-    costo               Float
-    descripcion         String?
-    fecha_registro      DateTime
-    DetalleVenta        DetalleVenta[]
-    CategoriaInventario CategoriaInventario @relation(fields: [categoria_id], references: [id])
+  id                  String             @id @default(uuid())
+  nombre              String
+  categoria_id        String
+  cantidad            Int
+  stock_minimo        Int
+  precio_venta        Float
+  costo               Float
+  descripcion         String?
+  fecha_registro      DateTime
+  DetalleVenta        DetalleVenta[]
+  CategoriaInventario CategoriaInventario @relation(fields: [categoria_id], references: [id])
 }
 
 model Usuario {
-    id             String      @id @default(uuid())
-    nombre         String
-    telefono       String
-    email          String      @unique
-    documento      String      @unique 
-    fecha_registro DateTime    @default(now())
-    activo         Boolean
-    notas          String?
-    Membresia      Membresia[]
-    Venta          Venta[]
+  id             String     @id @default(uuid())
+  nombre         String
+  telefono       String
+  email          String     @unique
+  documento      String     @unique
+  fecha_registro DateTime   @default(now())
+  activo         Boolean
+  notas          String?
+  Membresia      Membresia[]
+  Venta          Venta[]
 }
 
 model Venta {
-    id           String         @id @default(uuid())
-    usuario_id   String?
-    fecha_venta  DateTime
-    total        Float
-    metodo_pago  String
-    notas        String?
-    DetalleVenta DetalleVenta[]
-    Usuario      Usuario?       @relation(fields: [usuario_id], references: [id])
+  id           String     @id @default(uuid())
+  usuario_id   String?
+  fecha_venta  DateTime
+  total        Float
+  metodo_pago  String
+  notas        String?
+  DetalleVenta DetalleVenta[]
+  Usuario      Usuario?   @relation(fields: [usuario_id], references: [id])
+}
+
+model CategoriaGasto {
+  id              String           @id @default(uuid())
+  nombre          String
+  descripcion     String?
+  tipo            TipoGasto
+  activo          Boolean          @default(true)
+  gastos_detallados GastoDetallado[]
+  gastos          Gasto[]
+
+  @@map("categorias_gastos")
+}
+
+model GastoDetallado {
+  id              String          @id @default(uuid())
+  concepto        String
+  monto           Float
+  fecha           DateTime
+  categoria_id    String
+  descripcion     String?
+  comprobante_url String?
+  proveedor       String?
+  metodo_pago     String
+  estado          EstadoGasto     @default(PAGADO)
+  fecha_registro  DateTime        @default(now())
+  fecha_vencimiento DateTime?
+
+  categoria       CategoriaGasto  @relation(fields: [categoria_id], references: [id])
+
+  @@map("gastos_detallados")
+}
+
+model Entrenador {
+  id               String         @id @default(uuid())
+  nombre           String
+  telefono         String
+  email            String
+  especialidad     String?
+  tarifa_hora      Float?         // Nuevo campo para tarifa por hora
+  fecha_registro   DateTime
+  activo           Boolean
+  fecha_primer_pago DateTime?
+  fecha_ultimo_pago DateTime?
+  nominas          Nomina[]
+  horasTrabajadas  HorasEntrenador[]  // Relación con horas trabajadas
+}
+
+model HorasEntrenador {
+  id            String     @id @default(uuid())
+  entrenador_id String
+  fecha         DateTime
+  horas         Float      // Horas trabajadas ese día
+  entrenador    Entrenador @relation(fields: [entrenador_id], references: [id])
+
+  @@unique([entrenador_id, fecha])
+}
+
+model Nomina {
+  id             String      @id @default(uuid())
+  entrenador_id  String
+  mes            Int
+  año            Int
+  salario_base   Float
+  horas_totales  Float?      // Nuevo campo para total de horas en ese mes
+  monto_horas    Float?      // Total monto calculado por horas trabajadas
+  bonificaciones Float       @default(0)
+  deducciones    Float       @default(0)
+  total_pagar    Float
+  fecha_pago     DateTime?
+  estado         EstadoPago  @default(PENDIENTE)
+  notas          String?
+  fecha_registro DateTime    @default(now())
+
+  entrenador     Entrenador  @relation(fields: [entrenador_id], references: [id])
+
+  @@unique([entrenador_id, mes, año])
+  @@map("nomina")
+}
+
+model PagoMembresia {
+  id              String     @id @default(uuid())
+  membresia_id    String
+  monto           Float
+  fecha_pago      DateTime
+  fecha_vencimiento DateTime
+  metodo_pago     String
+  estado          EstadoPago  @default(PAGADO)
+  notas           String?
+  descuento       Float      @default(0)
+  recargo         Float      @default(0)
+  fecha_registro  DateTime   @default(now())
+
+  membresia       Membresia  @relation(fields: [membresia_id], references: [id])
+
+  @@map("pagos_membresias")
+}
+
+model IngresoAdicional {
+  id             String    @id @default(uuid())
+  concepto       String
+  monto          Float
+  fecha          DateTime
+  categoria      String
+  descripcion    String?
+  metodo_pago    String
+  fecha_registro DateTime  @default(now())
+
+  @@map("ingresos_adicionales")
+}
+
+model ResumenFinanciero {
+  id                 String    @id @default(uuid())
+  mes                Int
+  año                Int
+  total_ingresos     Float
+  total_gastos       Float
+  utilidad_bruta     Float
+  ingresos_membresias Float
+  ingresos_ventas    Float
+  ingresos_adicionales Float
+  gastos_operativos  Float
+  gastos_nomina      Float
+  fecha_calculo      DateTime  @default(now())
+
+  @@unique([mes, año])
+  @@map("resumen_financiero")
+}
+
+model ConfiguracionFinanciera {
+  id                String    @id @default(uuid())
+  nombre            String    @unique
+  valor             String
+  descripcion       String?
+  fecha_actualizacion DateTime  @default(now())
+
+  @@map("configuracion_financiera")
+}
+
+enum TipoGasto {
+  OPERATIVO
+  NOMINA
+  MANTENIMIENTO
+  MARKETING
+  SERVICIOS
+  IMPUESTOS
+  OTROS
+}
+
+enum EstadoGasto {
+  PENDIENTE
+  PAGADO
+  VENCIDO
+  CANCELADO
+}
+
+enum EstadoPago {
+  PENDIENTE
+  PAGADO
+  VENCIDO
+  PARCIAL
 }
 
 enum CategoriaTipo {
-    implemento
-    producto
+  IMPLEMENTO
+  PRODUCTO
+}
+
+model Board {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  color       String   @default("#6366f1") // Color del board
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  lists       List[]
+  
+  @@map("boards")
+}
+
+model List {
+  id        String   @id @default(cuid())
+  title     String
+  position  Int      // Para ordenar las listas
+  boardId   String
+  board     Board    @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  cards     Card[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("lists")
+}
+
+model Card {
+  id          String     @id @default(cuid())
+  title       String
+  description String?
+  position    Int        // Para ordenar las tarjetas
+  priority    Priority   @default(MEDIUM)
+  dueDate     DateTime?
+  completed   Boolean    @default(false)
+  listId      String
+  list        List       @relation(fields: [listId], references: [id], onDelete: Cascade)
+  labels      Label[]
+  attachments Attachment[]
+  comments    Comment[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  
+  @@map("cards")
+}
+
+model Label {
+  id      String @id @default(cuid())
+  name    String
+  color   String
+  cardId  String
+  card    Card   @relation(fields: [cardId], references: [id], onDelete: Cascade)
+  
+  @@map("labels")
+}
+
+model Attachment {
+  id       String @id @default(cuid())
+  name     String
+  url      String
+  size     Int?
+  type     String?
+  cardId   String
+  card     Card   @relation(fields: [cardId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  
+  @@map("attachments")
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  content   String
+  cardId    String
+  card      Card     @relation(fields: [cardId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("comments")
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
 }

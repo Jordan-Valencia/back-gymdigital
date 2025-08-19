@@ -18,7 +18,7 @@ async function bootstrap() {
       'http://localhost:5173',        
       'https://front-gymdigital.vercel.app' 
     ],
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE','PATCH', 'OPTIONS'],
     credentials: true,
   });
 

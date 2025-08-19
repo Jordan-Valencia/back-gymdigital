@@ -1,14 +1,7 @@
 import { IsString, IsOptional, IsEnum, IsNotEmpty } from 'class-validator';
-
-export enum CategoriaTipo {
-  IMPLEMENTO = 'implemento',
-  PRODUCTO = 'producto',
-}
+import { CategoriaTipo } from '@prisma/client';
 
 export class CreateCategoriaInventarioDto {
-  @IsString()
-  id: string;
-
   @IsString()
   @IsNotEmpty()
   nombre: string;
