@@ -10,7 +10,8 @@ export class EntrenadorService {
 
   /** Crear un nuevo entrenador */
   async create(data: CreateEntrenadorDto): Promise<Entrenador> {
-    try {
+    try { 
+      console.log('Creando entrenador:', data);
       return await this.prisma.entrenador.create({
         data: {
           nombre: data.nombre,
@@ -46,6 +47,7 @@ export class EntrenadorService {
 
   /** Actualizar entrenador */
   async update(id: string, data: UpdateEntrenadorDto): Promise<Entrenador> {
+    console.log('editando entrenador:', data);
     const existe = await this.prisma.entrenador.findUnique({ where: { id } });
     if (!existe) {
       throw new NotFoundException(`No se encontró un entrenador con el ID ${id}`);
@@ -58,6 +60,7 @@ export class EntrenadorService {
         email: data.email,
         especialidad: data.especialidad,
         activo: data.activo,
+        tarifa_hora: data.tarifa_hora,
       };
 
       return await this.prisma.entrenador.update({
